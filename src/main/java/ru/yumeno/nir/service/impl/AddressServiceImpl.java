@@ -3,6 +3,7 @@ package ru.yumeno.nir.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yumeno.nir.entity.Address;
+import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 import ru.yumeno.nir.repository.AddressRepository;
 import ru.yumeno.nir.service.AddressService;
 
@@ -25,8 +26,9 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address getAddressById(int id) {
-        Optional<Address> optionalAddress = addressRepository.findById(id);
-        return optionalAddress.orElse(null); // TODO change to exception
+        Optional<Address> optional = addressRepository.findById(id);
+        return optional.
+                orElseThrow(() -> new ResourceNotFoundException("Address not exist with id : " + id));
     }
 
     @Override

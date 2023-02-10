@@ -3,6 +3,7 @@ package ru.yumeno.nir.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yumeno.nir.entity.District;
+import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 import ru.yumeno.nir.repository.DistrictRepository;
 import ru.yumeno.nir.service.DistrictService;
 
@@ -25,8 +26,9 @@ public class DistrictServiceImpl implements DistrictService {
 
     @Override
     public District getDistrictById(int id) {
-        Optional<District> optionalAddress = districtRepository.findById(id);
-        return optionalAddress.orElse(null); // TODO change to exception
+        Optional<District> optional = districtRepository.findById(id);
+        return optional.
+                orElseThrow(() -> new ResourceNotFoundException("District not exist with id : " + id));
     }
 
     @Override

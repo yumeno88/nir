@@ -1,6 +1,8 @@
 package ru.yumeno.nir.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,8 +22,10 @@ public class News {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     @Column(nullable = false)
+    @NotBlank(message = "News header cannot be null")
     private String header;
     @Column(length = 3000)
+    @Size(max = 3000, message = "News body cannot be greater than 3000 symbols")
     private String body;
     @Column(nullable = false, updatable = false)
     private LocalDateTime createDate;
@@ -29,7 +33,7 @@ public class News {
     @JoinTable(
             name = "news_tag",
             joinColumns = @JoinColumn(name = "news_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
+            inverseJoinColumns = @JoinColumn(name = "tag_name")
     )
     private List<Tag> tags;
     @ManyToMany(fetch = FetchType.LAZY)

@@ -1,10 +1,12 @@
 package ru.yumeno.nir.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yumeno.nir.dto.NewsRequestDTO;
 import ru.yumeno.nir.dto.NewsResponseDTO;
 import ru.yumeno.nir.entity.News;
+import ru.yumeno.nir.entity.Tag;
 import ru.yumeno.nir.service.NewsService;
 
 import java.util.List;
@@ -24,13 +26,19 @@ public class NewsController {
         return newsService.getAllNews().stream().map(this::toNewsResponseDTO).toList();
     }
 
+    @GetMapping("/sort")
+    public List<NewsResponseDTO> getAllNewsByTags(@RequestParam(name = "tags") List<String> strTags) {
+        List<Tag> tags = strTags.stream().map(this::toTag).toList();
+        return newsService.getAllNewsByTags(tags).stream().map(this::toNewsResponseDTO).toList();
+    }
+
     @GetMapping("/{id}")
     public NewsResponseDTO getNewsById(@PathVariable int id) {
         return toNewsResponseDTO(newsService.getNewsById(id));
     }
 
     @PostMapping
-    public NewsResponseDTO addNews(@RequestBody NewsRequestDTO newsRequestDTO) {
+    public NewsResponseDTO addNews(@Valid @RequestBody NewsRequestDTO newsRequestDTO) {
         return toNewsResponseDTO(newsService.addNews(toNews(newsRequestDTO)));
     }
 
@@ -59,5 +67,9 @@ public class NewsController {
                 .body(news.getBody())
                 .tags(news.getTags())
                 .build();
+    }
+
+    private Tag toTag(String strTag) {
+        return new Tag(strTag);
     }
 }

@@ -3,6 +3,8 @@ package ru.yumeno.nir.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yumeno.nir.entity.News;
+import ru.yumeno.nir.entity.Tag;
+import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 import ru.yumeno.nir.repository.NewsRepository;
 import ru.yumeno.nir.service.NewsService;
 
@@ -25,8 +27,9 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public News getNewsById(int id) {
-        Optional<News> optionalAddress = newsRepository.findById(id);
-        return optionalAddress.orElse(null); // TODO change to exception
+        Optional<News> optional = newsRepository.findById(id);
+        return optional.
+                orElseThrow(() -> new ResourceNotFoundException("News not exist with id : " + id));
     }
 
     @Override
@@ -42,5 +45,10 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public void deleteNews(int id) {
         newsRepository.deleteById(id);
+    }
+
+    @Override
+    public List<News> getAllNewsByTags(List<Tag> tags) {
+        return newsRepository.findByTagsIn(tags);
     }
 }

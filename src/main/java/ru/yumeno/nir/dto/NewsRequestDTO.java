@@ -1,5 +1,7 @@
 package ru.yumeno.nir.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class NewsRequestDTO {
+    @NotBlank(message = "News header cannot be null")
+    @Size(min = 5, message = "News header length cannot be shorter than 5 characters")
     private String header;
     private String body;
     private List<Tag> tags;

@@ -1,6 +1,8 @@
 package ru.yumeno.nir.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,8 +14,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Tag {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private int id;
-    @Column(nullable = false, unique = true)
     private String name;
 }

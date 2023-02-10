@@ -3,6 +3,7 @@ package ru.yumeno.nir.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yumeno.nir.entity.Street;
+import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 import ru.yumeno.nir.repository.StreetRepository;
 import ru.yumeno.nir.service.StreetService;
 
@@ -25,8 +26,9 @@ public class StreetServiceImpl implements StreetService {
 
     @Override
     public Street getStreetById(int id) {
-        Optional<Street> optionalAddress = streetRepository.findById(id);
-        return optionalAddress.orElse(null); // TODO change to exception
+        Optional<Street> optional = streetRepository.findById(id);
+        return optional.
+                orElseThrow(() -> new ResourceNotFoundException("Street not exist with id : " + id));
     }
 
     @Override
