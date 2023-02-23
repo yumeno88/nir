@@ -1,6 +1,7 @@
 package ru.yumeno.nir.controller;
 
-import jakarta.validation.Valid;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yumeno.nir.dto.NewsRequestDTO;
@@ -9,10 +10,12 @@ import ru.yumeno.nir.entity.News;
 import ru.yumeno.nir.entity.Tag;
 import ru.yumeno.nir.service.NewsService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/news")
+@Api
 public class NewsController {
     private final NewsService newsService;
 
@@ -22,32 +25,38 @@ public class NewsController {
     }
 
     @GetMapping
+    @ApiOperation("Получение всех новостей")
     public List<NewsResponseDTO> getAllNews() {
         return newsService.getAllNews().stream().map(this::toNewsResponseDTO).toList();
     }
 
     @GetMapping("/sort")
+    @ApiOperation("Получение всех новостей по тегам")
     public List<NewsResponseDTO> getAllNewsByTags(@RequestParam(name = "tags") List<String> strTags) {
         List<Tag> tags = strTags.stream().map(this::toTag).toList();
         return newsService.getAllNewsByTags(tags).stream().map(this::toNewsResponseDTO).toList();
     }
 
     @GetMapping("/{id}")
+    @ApiOperation("Получение новости по ее id")
     public NewsResponseDTO getNewsById(@PathVariable int id) {
         return toNewsResponseDTO(newsService.getNewsById(id));
     }
 
     @PostMapping
+    @ApiOperation("Добавлние новости")
     public NewsResponseDTO addNews(@Valid @RequestBody NewsRequestDTO newsRequestDTO) {
         return toNewsResponseDTO(newsService.addNews(toNews(newsRequestDTO)));
     }
 
     @PutMapping
+    @ApiOperation("Обновление новости")
     public NewsResponseDTO updateNews(@RequestBody NewsRequestDTO newsRequestDTO) {
         return toNewsResponseDTO(newsService.updateNews(toNews(newsRequestDTO)));
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation("Удаление новости")
     public void addNews(@PathVariable int id) {
         newsService.deleteNews(id);
     }

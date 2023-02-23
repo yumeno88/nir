@@ -1,12 +1,12 @@
 package ru.yumeno.nir.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Subscription {
+public class Subscription { // TODO change phone and email to telegram account id
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
