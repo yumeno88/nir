@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.yumeno.nir.entity.Tag;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -13,7 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class NewsResponseDTO {
+    private int id;
     private String header;
     private String body;
+    private LocalDateTime createDate;
     private List<Tag> tags;
 }

@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/news")
 @Api
+@CrossOrigin("*")
 public class NewsController {
     private final NewsService newsService;
 
@@ -72,8 +73,10 @@ public class NewsController {
 
     private NewsResponseDTO toNewsResponseDTO(News news) {
         return NewsResponseDTO.builder()
+                .id(news.getId())
                 .header(news.getHeader())
                 .body(news.getBody())
+                .createDate(news.getCreateDate())
                 .tags(news.getTags())
                 .build();
     }
