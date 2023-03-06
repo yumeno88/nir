@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.yumeno.nir.entity.Address;
 import ru.yumeno.nir.entity.Tag;
 
 import javax.validation.constraints.NotBlank;
@@ -21,5 +20,6 @@ public class NewsRequestDTO {
     private String header;
     private String body;
     private List<Tag> tags;
-    private List<Address> addresses;
+    //    private List<Address> addresses; //TODO mb remove addresses
+    private String imageUrl;
 }

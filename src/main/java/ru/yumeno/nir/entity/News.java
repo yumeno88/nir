@@ -29,6 +29,9 @@ public class News {
     private String body;
     @Column(nullable = false, updatable = false)
     private LocalDateTime createDate;
+    @Column(nullable = false)
+    @NotBlank(message = "Image url cannot be null")
+    private String imageUrl;
     @ManyToMany
     @JoinTable(
             name = "news_tag",

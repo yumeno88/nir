@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yumeno.nir.dto.NewsRequestDTO;
+import ru.yumeno.nir.dto.NewsRequestForUpdateDTO;
 import ru.yumeno.nir.dto.NewsResponseDTO;
 import ru.yumeno.nir.entity.News;
 import ru.yumeno.nir.entity.Tag;
@@ -52,8 +53,8 @@ public class NewsController {
 
     @PutMapping
     @ApiOperation("Обновление новости")
-    public NewsResponseDTO updateNews(@RequestBody NewsRequestDTO newsRequestDTO) {
-        return toNewsResponseDTO(newsService.updateNews(toNews(newsRequestDTO)));
+    public NewsResponseDTO updateNews(@RequestBody NewsRequestForUpdateDTO newsRequestForUpdateDTO) {
+        return toNewsResponseDTO(newsService.updateNews(toNewsWithId(newsRequestForUpdateDTO)));
     }
 
     @DeleteMapping("/{id}")
@@ -67,7 +68,18 @@ public class NewsController {
                 .header(newsRequestDTO.getHeader())
                 .body(newsRequestDTO.getBody())
                 .tags(newsRequestDTO.getTags())
-                .addresses(newsRequestDTO.getAddresses())
+                .imageUrl(newsRequestDTO.getImageUrl())
+                .build();
+    }
+
+    private News toNewsWithId(NewsRequestForUpdateDTO newsRequestForUpdateDTO) {
+        return News.builder()
+                .id(newsRequestForUpdateDTO.getId())
+                .header(newsRequestForUpdateDTO.getHeader())
+                .body(newsRequestForUpdateDTO.getBody())
+                .tags(newsRequestForUpdateDTO.getTags())
+                .createDate(newsRequestForUpdateDTO.getCreateDate())
+                .imageUrl(newsRequestForUpdateDTO.getImageUrl())
                 .build();
     }
 
@@ -78,6 +90,7 @@ public class NewsController {
                 .body(news.getBody())
                 .createDate(news.getCreateDate())
                 .tags(news.getTags())
+                .imageUrl(news.getImageUrl())
                 .build();
     }
 

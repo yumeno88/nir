@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.yumeno.nir.entity.Tag;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,11 +15,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NewsResponseDTO {
+public class NewsRequestForUpdateDTO {
     private int id;
+    @NotBlank(message = "News header cannot be null")
+    @Size(min = 5, message = "News header length cannot be shorter than 5 characters")
     private String header;
     private String body;
-    private LocalDateTime createDate;
     private List<Tag> tags;
+    private LocalDateTime createDate;
+    //    private List<Address> addresses; //TODO mb remove addresses
     private String imageUrl;
 }
