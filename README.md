@@ -23,6 +23,9 @@
 * Maven
 * Lombok
 
+### Посмотреть документацию
+http://localhost:8080/swagger-ui/
+
 ## Схема БД
 
 ![drawSQL-nir-export-2023-02-10](https://user-images.githubusercontent.com/122719523/218102795-df109024-4eca-485f-a652-5d8ba9928fac.png)
