@@ -22,7 +22,9 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<News> getAllNews() {
-        return newsRepository.findAll();
+        List<News> newsList = newsRepository.findAll();
+        newsList.sort((n1, n2) -> n2.getCreateDate().compareTo(n1.getCreateDate()));
+        return newsList;
     }
 
     @Override
