@@ -11,7 +11,7 @@ import ru.yumeno.nir.service.StreetService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/streets")
+@RequestMapping(value = "/streets")
 @Api
 public class StreetController {
     private final StreetService streetService;

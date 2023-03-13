@@ -11,7 +11,7 @@ import ru.yumeno.nir.service.TagService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tags")
+@RequestMapping(value = "/tags")
 @Api
 public class TagController {
     private final TagService tagService;

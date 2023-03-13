@@ -11,7 +11,7 @@ import ru.yumeno.nir.service.AddressService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/addresses")
+@RequestMapping(value = "/addresses")
 @Api
 public class AddressController {
     private final AddressService addressService;

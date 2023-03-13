@@ -11,7 +11,7 @@ import ru.yumeno.nir.service.SubscriptionService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/subscriptions")
+@RequestMapping(value = "/subscriptions")
 @Api
 public class SubscriptionController {
     private final SubscriptionService subscriptionService;

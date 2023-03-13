@@ -11,7 +11,7 @@ import ru.yumeno.nir.service.DistrictService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/districts")
+@RequestMapping(value = "/districts")
 @Api
 public class DistrictController {
     private final DistrictService districtService;
