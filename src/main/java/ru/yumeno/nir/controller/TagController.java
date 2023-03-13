@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yumeno.nir.dto.TagDTO;
 import ru.yumeno.nir.entity.Tag;
 import ru.yumeno.nir.service.TagService;
 
@@ -20,33 +21,45 @@ public class TagController {
         this.tagService = tagService;
     }
 
-    @GetMapping
+    @GetMapping(value = "/")
     @ApiOperation("Получение всех тегов")
-    public List<Tag> getAllTags() {
-        return tagService.getAllTags();
+    public List<TagDTO> getAllTags() {
+        return tagService.getAllTags().stream().map(this::toTagDTO).toList();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     @ApiOperation("Получение тега по его id")
-    public Tag getTagById(@PathVariable int id) {
-        return tagService.getTagById(id);
+    public TagDTO getTagById(@PathVariable int id) {
+        return toTagDTO(tagService.getTagById(id));
     }
 
-    @PostMapping
+    @PostMapping(value = "/")
     @ApiOperation("Добавлние тега")
-    public Tag addTag(@RequestBody Tag tag) {
-        return tagService.addTag(tag);
+    public TagDTO addTag(@RequestBody TagDTO tagDTO) {
+        return toTagDTO(tagService.addTag(toTag(tagDTO)));
     }
 
-    @PutMapping
+    @PutMapping(value = "/")
     @ApiOperation("Обновление тега")
-    public Tag updateTag(@RequestBody Tag tag) {
-        return tagService.updateTag(tag);
+    public TagDTO updateTag(@RequestBody TagDTO tagDTO) {
+        return toTagDTO(tagService.updateTag(toTag(tagDTO)));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}")
     @ApiOperation("Удаление тега")
-    public void addTag(@PathVariable int id) {
+    public void deleteTag(@PathVariable int id) {
         tagService.deleteTag(id);
+    }
+
+    private Tag toTag(TagDTO tagDTO) {
+        return Tag.builder()
+                .name(tagDTO.getName())
+                .build();
+    }
+
+    private TagDTO toTagDTO(Tag tag) {
+        return TagDTO.builder()
+                .name(tag.getName())
+                .build();
     }
 }

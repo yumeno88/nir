@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yumeno.nir.dto.SubscriptionDTO;
 import ru.yumeno.nir.entity.Subscription;
 import ru.yumeno.nir.service.SubscriptionService;
 
@@ -20,33 +21,53 @@ public class SubscriptionController {
         this.subscriptionService = subscriptionService;
     }
 
-    @GetMapping
+    @GetMapping(value = "/")
     @ApiOperation("Получение всех подписок")
-    public List<Subscription> getAllSubscriptions() {
-        return subscriptionService.getAllSubscriptions();
+    public List<SubscriptionDTO> getAllSubscriptions() {
+        return subscriptionService.getAllSubscriptions().stream().map(this::toSubscriptionDTO).toList();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     @ApiOperation("Получение подписки по ее id")
-    public Subscription getSubscriptionById(@PathVariable int id) {
-        return subscriptionService.getSubscriptionById(id);
+    public SubscriptionDTO getSubscriptionById(@PathVariable int id) {
+        return toSubscriptionDTO(subscriptionService.getSubscriptionById(id));
     }
 
-    @PostMapping
+    @PostMapping(value = "/")
     @ApiOperation("Добавлние подписки")
-    public Subscription addSubscription(@RequestBody Subscription subscription) {
-        return subscriptionService.addSubscription(subscription);
+    public SubscriptionDTO addSubscription(@RequestBody SubscriptionDTO subscriptionDTO) {
+        return toSubscriptionDTO(subscriptionService.addSubscription(toSubscription(subscriptionDTO)));
     }
 
-    @PutMapping
+    @PutMapping(value = "/")
     @ApiOperation("Обновление подписки")
-    public Subscription updateSubscription(@RequestBody Subscription subscription) {
-        return subscriptionService.updateSubscription(subscription);
+    public SubscriptionDTO updateSubscription(@RequestBody SubscriptionDTO subscriptionDTO) {
+        return toSubscriptionDTO(subscriptionService.updateSubscription(toSubscription(subscriptionDTO)));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}")
     @ApiOperation("Удаление подписки")
-    public void addSubscription(@PathVariable int id) {
+    public void deleteSubscription(@PathVariable int id) {
         subscriptionService.deleteSubscription(id);
+    }
+
+    private Subscription toSubscription(SubscriptionDTO subscriptionDTO) {
+        return Subscription.builder()
+                .id(subscriptionDTO.getId())
+                .address(subscriptionDTO.getAddress())
+                .tags(subscriptionDTO.getTags())
+                .email(subscriptionDTO.getEmail())
+                .phoneNumber(subscriptionDTO.getPhoneNumber())
+                .build();
+    }
+
+    private SubscriptionDTO toSubscriptionDTO(Subscription subscription) {
+        return SubscriptionDTO.builder()
+                .id(subscription.getId())
+                .address(subscription.getAddress())
+                .tags(subscription.getTags())
+                .email(subscription.getEmail())
+                .phoneNumber(subscription.getPhoneNumber())
+                .build();
     }
 }

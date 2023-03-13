@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,15 +20,12 @@ public class News {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     @Column(nullable = false)
-    @NotBlank(message = "News header cannot be null")
     private String header;
     @Column(length = 3000)
-    @Size(max = 3000, message = "News body cannot be greater than 3000 symbols")
     private String body;
     @Column(nullable = false, updatable = false)
     private LocalDateTime createDate;
     @Column(nullable = false)
-    @NotBlank(message = "Image url cannot be null")
     private String imageUrl;
     @ManyToMany
     @JoinTable(

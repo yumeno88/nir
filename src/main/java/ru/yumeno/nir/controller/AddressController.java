@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yumeno.nir.dto.AddressDTO;
 import ru.yumeno.nir.entity.Address;
 import ru.yumeno.nir.service.AddressService;
 
@@ -20,33 +21,55 @@ public class AddressController {
         this.addressService = addressService;
     }
 
-    @GetMapping
+    @GetMapping(value = "/")
     @ApiOperation("Получение всех адресов")
-    public List<Address> getAllAddresses() {
-        return addressService.getAllAddresses();
+    public List<AddressDTO> getAllAddresses() {
+        return addressService.getAllAddresses().stream().map(this::toAddressDTO).toList();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     @ApiOperation("Получение адреса по его id")
-    public Address getAddressById(@PathVariable int id) {
-        return addressService.getAddressById(id);
+    public AddressDTO getAddressById(@PathVariable int id) {
+        return toAddressDTO(addressService.getAddressById(id));
     }
 
-    @PostMapping
+    @PostMapping(value = "/")
     @ApiOperation("Добавлние адреса")
-    public Address addAddress(@RequestBody Address address) {
-        return addressService.addAddress(address);
+    public AddressDTO addAddress(@RequestBody AddressDTO addressDTO) {
+        return toAddressDTO(addressService.addAddress(toAddress(addressDTO)));
     }
 
-    @PutMapping
+    @PutMapping(value = "/")
     @ApiOperation("Обновление адреса")
-    public Address updateAddress(@RequestBody Address address) {
-        return addressService.updateAddress(address);
+    public AddressDTO updateAddress(@RequestBody AddressDTO addressDTO) {
+        return toAddressDTO(addressService.updateAddress(toAddress(addressDTO)));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}")
     @ApiOperation("Удаление адреса")
     public void deleteAddress(@PathVariable int id) {
         addressService.deleteAddress(id);
+    }
+
+    private Address toAddress(AddressDTO addressDTO) {
+        return Address.builder()
+                .id(addressDTO.getId())
+                .street(addressDTO.getStreet())
+                .porch(addressDTO.getPorch())
+                .house(addressDTO.getHouse())
+                .district(addressDTO.getDistrict())
+                .apartment(addressDTO.getApartment())
+                .build();
+    }
+
+    private AddressDTO toAddressDTO(Address address) {
+        return AddressDTO.builder()
+                .id(address.getId())
+                .street(address.getStreet())
+                .porch(address.getPorch())
+                .house(address.getHouse())
+                .district(address.getDistrict())
+                .apartment(address.getApartment())
+                .build();
     }
 }

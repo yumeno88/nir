@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yumeno.nir.dto.StreetDTO;
 import ru.yumeno.nir.entity.Street;
 import ru.yumeno.nir.service.StreetService;
 
@@ -20,33 +21,47 @@ public class StreetController {
         this.streetService = streetService;
     }
 
-    @GetMapping
+    @GetMapping(value = "/")
     @ApiOperation("Получение всех улиц")
-    public List<Street> getAllStreets() {
-        return streetService.getAllStreets();
+    public List<StreetDTO> getAllStreets() {
+        return streetService.getAllStreets().stream().map(this::toStreetDTO).toList();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     @ApiOperation("Получение улицы по ее id")
-    public Street getStreetById(@PathVariable int id) {
-        return streetService.getStreetById(id);
+    public StreetDTO getStreetById(@PathVariable int id) {
+        return toStreetDTO(streetService.getStreetById(id));
     }
 
-    @PostMapping
+    @PostMapping(value = "/")
     @ApiOperation("Добавлние улицы")
-    public Street addStreet(@RequestBody Street street) {
-        return streetService.addStreet(street);
+    public StreetDTO addStreet(@RequestBody StreetDTO streetDTO) {
+        return toStreetDTO(streetService.addStreet(toStreet(streetDTO)));
     }
 
-    @PutMapping
+    @PutMapping(value = "/")
     @ApiOperation("Обновление улицы")
-    public Street updateStreet(@RequestBody Street street) {
-        return streetService.updateStreet(street);
+    public StreetDTO updateStreet(@RequestBody StreetDTO streetDTO) {
+        return toStreetDTO(streetService.updateStreet(toStreet(streetDTO)));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}")
     @ApiOperation("Удаление улицы")
-    public void addStreet(@PathVariable int id) {
+    public void deleteStreet(@PathVariable int id) {
         streetService.deleteStreet(id);
+    }
+
+    private Street toStreet(StreetDTO streetDTO) {
+        return Street.builder()
+                .id(streetDTO.getId())
+                .name(streetDTO.getName())
+                .build();
+    }
+
+    private StreetDTO toStreetDTO(Street street) {
+        return StreetDTO.builder()
+                .id(street.getId())
+                .name(street.getName())
+                .build();
     }
 }

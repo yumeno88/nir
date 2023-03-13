@@ -1,12 +1,12 @@
 package ru.yumeno.nir.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Subscription { // TODO change phone and email to telegram account id
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -24,7 +25,6 @@ public class Subscription { // TODO change phone and email to telegram account i
     private String phoneNumber; // TODO regex
     @ManyToOne
     @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
-    @NotBlank(message = "Subscription address cannot be null")
     private Address address;
     @ManyToMany
     @JoinTable(

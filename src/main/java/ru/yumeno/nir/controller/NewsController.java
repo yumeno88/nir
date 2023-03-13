@@ -26,40 +26,40 @@ public class NewsController {
         this.newsService = newsService;
     }
 
-    @GetMapping
+    @GetMapping(value = "/")
     @ApiOperation("Получение всех новостей")
     public List<NewsResponseDTO> getAllNews() {
         return newsService.getAllNews().stream().map(this::toNewsResponseDTO).toList();
     }
 
-    @GetMapping("/sort")
+    @GetMapping(value = "/sort")
     @ApiOperation("Получение всех новостей по тегам")
     public List<NewsResponseDTO> getAllNewsByTags(@RequestParam(name = "tags") List<String> strTags) {
         List<Tag> tags = strTags.stream().map(this::toTag).toList();
         return newsService.getAllNewsByTags(tags).stream().map(this::toNewsResponseDTO).toList();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     @ApiOperation("Получение новости по ее id")
     public NewsResponseDTO getNewsById(@PathVariable int id) {
         return toNewsResponseDTO(newsService.getNewsById(id));
     }
 
-    @PostMapping
+    @PostMapping(value = "/")
     @ApiOperation("Добавлние новости")
     public NewsResponseDTO addNews(@Valid @RequestBody NewsRequestDTO newsRequestDTO) {
         return toNewsResponseDTO(newsService.addNews(toNews(newsRequestDTO)));
     }
 
-    @PutMapping
+    @PutMapping(value = "/")
     @ApiOperation("Обновление новости")
     public NewsResponseDTO updateNews(@RequestBody NewsRequestForUpdateDTO newsRequestForUpdateDTO) {
         return toNewsResponseDTO(newsService.updateNews(toNewsWithId(newsRequestForUpdateDTO)));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}")
     @ApiOperation("Удаление новости")
-    public void addNews(@PathVariable int id) {
+    public void deleteNews(@PathVariable int id) {
         newsService.deleteNews(id);
     }
 

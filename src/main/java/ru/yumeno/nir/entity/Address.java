@@ -1,36 +1,32 @@
 package ru.yumeno.nir.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "address")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     @Column(nullable = false)
-    @NotBlank(message = "Address apartment cannot be null")
     private String apartment;
     @Column(nullable = false)
-    @NotBlank(message = "Address house cannot be null")
     private String house;
     @Column(nullable = false)
-    @NotBlank(message = "Address porch cannot be null")
     private String porch;
     @ManyToOne()
-    @JoinColumn(name = "district_id", referencedColumnName = "id", nullable = false)
-    @NotBlank(message = "Address district cannot be null")
+    @JoinColumn(name = "district_id", referencedColumnName = "id")
     private District district;
-    @ManyToOne()
-    @JoinColumn(name = "street_id", referencedColumnName = "id", nullable = false)
-    @NotBlank(message = "Address street cannot be null")
+    @ManyToOne
+    @JoinColumn(name = "street_id", referencedColumnName = "id")
     private Street street;
 }

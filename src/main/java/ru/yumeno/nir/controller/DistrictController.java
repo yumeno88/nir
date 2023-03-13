@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yumeno.nir.dto.DistrictDTO;
 import ru.yumeno.nir.entity.District;
 import ru.yumeno.nir.service.DistrictService;
 
@@ -20,33 +21,47 @@ public class DistrictController {
         this.districtService = districtService;
     }
 
-    @GetMapping
+    @GetMapping(value = "/")
     @ApiOperation("Получение всех районов")
-    public List<District> getAllDistricts() {
-        return districtService.getAllDistricts();
+    public List<DistrictDTO> getAllDistricts() {
+        return districtService.getAllDistricts().stream().map(this::toDistrictDTO).toList();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     @ApiOperation("Получение района по его id")
-    public District getDistrictById(@PathVariable int id) {
-        return districtService.getDistrictById(id);
+    public DistrictDTO getDistrictById(@PathVariable int id) {
+        return toDistrictDTO(districtService.getDistrictById(id));
     }
 
-    @PostMapping
+    @PostMapping(value = "/")
     @ApiOperation("Добавлние района")
-    public District addDistrict(@RequestBody District district) {
-        return districtService.addDistrict(district);
+    public DistrictDTO addDistrict(@RequestBody DistrictDTO districtDTO) {
+        return toDistrictDTO(districtService.addDistrict(toDistrict(districtDTO)));
     }
 
-    @PutMapping
+    @PutMapping(value = "/")
     @ApiOperation("Обновление района")
-    public District updateDistrict(@RequestBody District district) {
-        return districtService.updateDistrict(district);
+    public DistrictDTO updateDistrict(@RequestBody DistrictDTO districtDTO) {
+        return toDistrictDTO(districtService.updateDistrict(toDistrict(districtDTO)));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}")
     @ApiOperation("Удаление района")
-    public void addDistrict(@PathVariable int id) {
+    public void deleteDistrict(@PathVariable int id) {
         districtService.deleteDistrict(id);
+    }
+
+    private District toDistrict(DistrictDTO districtDTO) {
+        return District.builder()
+                .id(districtDTO.getId())
+                .name(districtDTO.getName())
+                .build();
+    }
+
+    private DistrictDTO toDistrictDTO(District district) {
+        return DistrictDTO.builder()
+                .id(district.getId())
+                .name(district.getName())
+                .build();
     }
 }
