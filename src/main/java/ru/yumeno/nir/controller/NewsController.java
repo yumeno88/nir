@@ -26,7 +26,7 @@ public class NewsController {
         this.newsService = newsService;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     @ApiOperation("Получение всех новостей")
     public List<NewsResponseDTO> getAllNews() {
         return newsService.getAllNews().stream().map(this::toNewsResponseDTO).toList();
@@ -45,13 +45,13 @@ public class NewsController {
         return toNewsResponseDTO(newsService.getNewsById(id));
     }
 
-    @PostMapping(value = "/")
+    @PostMapping(value = "")
     @ApiOperation("Добавлние новости")
     public NewsResponseDTO addNews(@Valid @RequestBody NewsRequestDTO newsRequestDTO) {
         return toNewsResponseDTO(newsService.addNews(toNews(newsRequestDTO)));
     }
 
-    @PutMapping(value = "/")
+    @PutMapping(value = "")
     @ApiOperation("Обновление новости")
     public NewsResponseDTO updateNews(@RequestBody NewsRequestForUpdateDTO newsRequestForUpdateDTO) {
         return toNewsResponseDTO(newsService.updateNews(toNewsWithId(newsRequestForUpdateDTO)));

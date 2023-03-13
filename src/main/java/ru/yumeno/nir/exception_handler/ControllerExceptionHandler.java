@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.yumeno.nir.dto.ResourceErrorDTO;
+import ru.yumeno.nir.exception_handler.exceptions.DeletionFailedException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 
 import java.util.HashMap;
@@ -19,6 +20,12 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ResourceErrorDTO> handleException(ResourceNotFoundException e) {
         ResourceErrorDTO resourceErrorDTO = new ResourceErrorDTO(e.getMessage());
         return new ResponseEntity<>(resourceErrorDTO, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ResourceErrorDTO> handleException(DeletionFailedException e) {
+        ResourceErrorDTO resourceErrorDTO = new ResourceErrorDTO(e.getMessage());
+        return new ResponseEntity<>(resourceErrorDTO, HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler

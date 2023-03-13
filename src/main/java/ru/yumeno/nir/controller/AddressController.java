@@ -21,7 +21,7 @@ public class AddressController {
         this.addressService = addressService;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     @ApiOperation("Получение всех адресов")
     public List<AddressDTO> getAllAddresses() {
         return addressService.getAllAddresses().stream().map(this::toAddressDTO).toList();
@@ -33,13 +33,13 @@ public class AddressController {
         return toAddressDTO(addressService.getAddressById(id));
     }
 
-    @PostMapping(value = "/")
+    @PostMapping(value = "")
     @ApiOperation("Добавлние адреса")
     public AddressDTO addAddress(@RequestBody AddressDTO addressDTO) {
         return toAddressDTO(addressService.addAddress(toAddress(addressDTO)));
     }
 
-    @PutMapping(value = "/")
+    @PutMapping(value = "")
     @ApiOperation("Обновление адреса")
     public AddressDTO updateAddress(@RequestBody AddressDTO addressDTO) {
         return toAddressDTO(addressService.updateAddress(toAddress(addressDTO)));

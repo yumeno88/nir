@@ -21,7 +21,7 @@ public class DistrictController {
         this.districtService = districtService;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     @ApiOperation("Получение всех районов")
     public List<DistrictDTO> getAllDistricts() {
         return districtService.getAllDistricts().stream().map(this::toDistrictDTO).toList();
@@ -33,13 +33,13 @@ public class DistrictController {
         return toDistrictDTO(districtService.getDistrictById(id));
     }
 
-    @PostMapping(value = "/")
+    @PostMapping(value = "")
     @ApiOperation("Добавлние района")
     public DistrictDTO addDistrict(@RequestBody DistrictDTO districtDTO) {
         return toDistrictDTO(districtService.addDistrict(toDistrict(districtDTO)));
     }
 
-    @PutMapping(value = "/")
+    @PutMapping(value = "")
     @ApiOperation("Обновление района")
     public DistrictDTO updateDistrict(@RequestBody DistrictDTO districtDTO) {
         return toDistrictDTO(districtService.updateDistrict(toDistrict(districtDTO)));

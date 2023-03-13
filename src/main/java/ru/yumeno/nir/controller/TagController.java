@@ -21,7 +21,7 @@ public class TagController {
         this.tagService = tagService;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     @ApiOperation("Получение всех тегов")
     public List<TagDTO> getAllTags() {
         return tagService.getAllTags().stream().map(this::toTagDTO).toList();
@@ -33,13 +33,13 @@ public class TagController {
         return toTagDTO(tagService.getTagById(id));
     }
 
-    @PostMapping(value = "/")
+    @PostMapping(value = "")
     @ApiOperation("Добавлние тега")
     public TagDTO addTag(@RequestBody TagDTO tagDTO) {
         return toTagDTO(tagService.addTag(toTag(tagDTO)));
     }
 
-    @PutMapping(value = "/")
+    @PutMapping(value = "")
     @ApiOperation("Обновление тега")
     public TagDTO updateTag(@RequestBody TagDTO tagDTO) {
         return toTagDTO(tagService.updateTag(toTag(tagDTO)));

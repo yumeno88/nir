@@ -21,7 +21,7 @@ public class SubscriptionController {
         this.subscriptionService = subscriptionService;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     @ApiOperation("Получение всех подписок")
     public List<SubscriptionDTO> getAllSubscriptions() {
         return subscriptionService.getAllSubscriptions().stream().map(this::toSubscriptionDTO).toList();
@@ -33,13 +33,13 @@ public class SubscriptionController {
         return toSubscriptionDTO(subscriptionService.getSubscriptionById(id));
     }
 
-    @PostMapping(value = "/")
+    @PostMapping(value = "")
     @ApiOperation("Добавлние подписки")
     public SubscriptionDTO addSubscription(@RequestBody SubscriptionDTO subscriptionDTO) {
         return toSubscriptionDTO(subscriptionService.addSubscription(toSubscription(subscriptionDTO)));
     }
 
-    @PutMapping(value = "/")
+    @PutMapping(value = "")
     @ApiOperation("Обновление подписки")
     public SubscriptionDTO updateSubscription(@RequestBody SubscriptionDTO subscriptionDTO) {
         return toSubscriptionDTO(subscriptionService.updateSubscription(toSubscription(subscriptionDTO)));

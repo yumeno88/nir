@@ -21,7 +21,7 @@ public class StreetController {
         this.streetService = streetService;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     @ApiOperation("Получение всех улиц")
     public List<StreetDTO> getAllStreets() {
         return streetService.getAllStreets().stream().map(this::toStreetDTO).toList();
@@ -33,13 +33,13 @@ public class StreetController {
         return toStreetDTO(streetService.getStreetById(id));
     }
 
-    @PostMapping(value = "/")
+    @PostMapping(value = "")
     @ApiOperation("Добавлние улицы")
     public StreetDTO addStreet(@RequestBody StreetDTO streetDTO) {
         return toStreetDTO(streetService.addStreet(toStreet(streetDTO)));
     }
 
-    @PutMapping(value = "/")
+    @PutMapping(value = "")
     @ApiOperation("Обновление улицы")
     public StreetDTO updateStreet(@RequestBody StreetDTO streetDTO) {
         return toStreetDTO(streetService.updateStreet(toStreet(streetDTO)));
