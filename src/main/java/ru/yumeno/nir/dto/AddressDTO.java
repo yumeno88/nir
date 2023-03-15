@@ -1,14 +1,18 @@
 package ru.yumeno.nir.dto;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.yumeno.nir.entity.District;
 import ru.yumeno.nir.entity.Street;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class AddressDTO {
     private int id;
