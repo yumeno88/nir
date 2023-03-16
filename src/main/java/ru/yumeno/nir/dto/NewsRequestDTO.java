@@ -23,7 +23,7 @@ public class NewsRequestDTO {
     @Size(max = 3000, message = "News body cannot be greater than 3000 symbols")
     private String body;
     private List<Tag> tags;
-    //    private List<Address> addresses; //TODO mb remove addresses
+    //    private List<Address> addresses; // TODO mb remove addresses
     @NotBlank(message = "Image url cannot be null")
     private String imageUrl;
 }
