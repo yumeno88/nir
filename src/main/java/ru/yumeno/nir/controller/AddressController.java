@@ -8,6 +8,7 @@ import ru.yumeno.nir.dto.AddressDTO;
 import ru.yumeno.nir.entity.Address;
 import ru.yumeno.nir.service.AddressService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,13 +36,13 @@ public class AddressController {
 
     @PostMapping(value = "")
     @ApiOperation("Добавлние адреса")
-    public AddressDTO addAddress(@RequestBody AddressDTO addressDTO) {
+    public AddressDTO addAddress(@Valid @RequestBody AddressDTO addressDTO) {
         return toAddressDTO(addressService.addAddress(toAddress(addressDTO)));
     }
 
     @PutMapping(value = "")
     @ApiOperation("Обновление адреса")
-    public AddressDTO updateAddress(@RequestBody AddressDTO addressDTO) {
+    public AddressDTO updateAddress(@Valid @RequestBody AddressDTO addressDTO) {
         return toAddressDTO(addressService.updateAddress(toAddress(addressDTO)));
     }
 

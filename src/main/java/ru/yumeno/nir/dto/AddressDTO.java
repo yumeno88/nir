@@ -9,6 +9,7 @@ import ru.yumeno.nir.entity.District;
 import ru.yumeno.nir.entity.Street;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -22,8 +23,8 @@ public class AddressDTO {
     private String house;
     @NotBlank(message = "Address porch cannot be null")
     private String porch;
-    @NotBlank(message = "Address district cannot be null")
+    @NotNull(message = "Address district cannot be null")
     private District district;
-    @NotBlank(message = "Address street cannot be null")
+    @NotNull(message = "Address street cannot be null")
     private Street street;
 }

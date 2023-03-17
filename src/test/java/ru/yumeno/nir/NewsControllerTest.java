@@ -28,6 +28,7 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -42,6 +43,14 @@ class NewsControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private NewsController controller;
+
+    private static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Test
     public void controllerIsNotNullTest() {
@@ -81,6 +90,7 @@ class NewsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.header", Matchers.equalTo("header")))
                 .andExpect(jsonPath("$.body", Matchers.equalTo("body")))
+                .andExpect(jsonPath("$.tags[0].name", Matchers.equalTo("water")))
                 .andExpect(jsonPath("$.imageUrl", Matchers.equalTo("url")));
     }
 
@@ -93,7 +103,7 @@ class NewsControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResourceNotFoundException))
-                .andExpect(result -> assertEquals("News not exist with id : 100",
+                .andExpect(result -> assertEquals("News not exist with id : " + id,
                         Objects.requireNonNull(result.getResolvedException()).getMessage()));
     }
 
@@ -134,7 +144,9 @@ class NewsControllerTest {
                         )
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException()
+                        instanceof MethodArgumentNotValidException));
     }
 
     @Test
@@ -186,7 +198,7 @@ class NewsControllerTest {
     @Sql(value = {"/sql/add-news-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void deleteNewsByIdTest() throws Exception {
         int id = 5;
-        this.mockMvc.perform(get("/news/" + id))
+        this.mockMvc.perform(delete("/news/" + id))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -196,19 +208,11 @@ class NewsControllerTest {
     @Sql(value = {"/sql/add-news-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void deleteNewsByNonExistentIdTest() throws Exception {
         int id = 100;
-        this.mockMvc.perform(get("/news/" + id))
+        this.mockMvc.perform(delete("/news/" + id))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResourceNotFoundException))
                 .andExpect(result -> assertEquals("News not exist with id : " + id,
                         Objects.requireNonNull(result.getResolvedException()).getMessage()));
-    }
-
-    private static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

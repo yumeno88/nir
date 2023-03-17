@@ -27,7 +27,7 @@ public class News {
     private LocalDateTime createDate;
     @Column(nullable = false)
     private String imageUrl;
-    @ManyToMany // (cascade = CascadeType.REMOVE) // TODO
+    @ManyToMany
     @JoinTable(
             name = "news_tag",
             joinColumns = @JoinColumn(name = "news_id"),

@@ -53,7 +53,7 @@ public class NewsController {
 
     @PutMapping(value = "")
     @ApiOperation("Обновление новости")
-    public NewsResponseDTO updateNews(@RequestBody NewsRequestForUpdateDTO newsRequestForUpdateDTO) {
+    public NewsResponseDTO updateNews(@Valid @RequestBody NewsRequestForUpdateDTO newsRequestForUpdateDTO) {
         return toNewsResponseDTO(newsService.updateNews(toNewsWithId(newsRequestForUpdateDTO)));
     }
 

@@ -46,7 +46,12 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public void deleteNews(int id) {
-        newsRepository.deleteById(id);
+        Optional<News> optional = newsRepository.findById(id);
+        if (optional.isPresent()) {
+            newsRepository.deleteById(id);
+        } else {
+            throw new ResourceNotFoundException("News not exist with id : " + id);
+        }
     }
 
     @Override

@@ -1,21 +1,13 @@
 delete
-from news_tag;
-delete
 from news_address;
 delete
 from news;
-delete
-from tag;
 delete
 from address;
 delete
 from district;
 delete
 from street;
-
-insert into tag (name)
-values ('gas'),
-       ('water');
 
 insert into district (id, name)
 values (4, 'district1'),
@@ -32,10 +24,6 @@ values (4, 'apart1', 'house1', 'porch1', 4, 5),
 insert into news (id, body, create_date, header, image_url)
 values (4, 'body', '2023-03-14 21:24:54.635517', 'header', 'url'),
        (5, 'body2', '2023-03-14 21:25:36.546418', 'header2', 'url2');
-
-insert into news_tag (news_id, tag_name)
-values (4, 'water'),
-       (5, 'gas');
 
 insert into news_address (news_id, address_id)
 values (4, 4),

@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.yumeno.nir.entity.Tag;
 
 @Repository
-public interface TagRepository extends JpaRepository<Tag, Integer> {
+public interface TagRepository extends JpaRepository<Tag, String> {
 }

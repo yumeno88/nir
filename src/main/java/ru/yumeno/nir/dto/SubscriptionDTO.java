@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import ru.yumeno.nir.entity.Address;
 import ru.yumeno.nir.entity.Tag;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -17,10 +17,9 @@ import java.util.List;
 @Builder
 public class SubscriptionDTO {
     private int id;
-    @Email(message = "uncorrect email")
-    private String email;
-    private String phoneNumber;
-    @NotBlank(message = "Subscription address cannot be null")
-    private Address address;
+    @NotBlank
+    private String chatId;
+    private Address address; // TODO mb remove
+    @NotNull
     private List<Tag> tags;
 }

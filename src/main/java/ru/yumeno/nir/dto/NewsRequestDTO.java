@@ -8,6 +8,7 @@ import ru.yumeno.nir.entity.Tag;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class NewsRequestDTO {
     @Column(length = 3000)
     @Size(max = 3000, message = "News body cannot be greater than 3000 symbols")
     private String body;
+    @NotNull
     private List<Tag> tags;
     //    private List<Address> addresses; // TODO mb remove addresses
     @NotBlank(message = "Image url cannot be null")

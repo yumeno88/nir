@@ -54,7 +54,7 @@ public class StreetServiceImpl implements StreetService {
         if (addresses.isEmpty()) {
             streetRepository.deleteById(id);
         } else {
-            throw new DeletionFailedException("Street cannot be deleted");
+            throw new DeletionFailedException("Street cannot be deleted with id : " + id);
         }
     }
 }

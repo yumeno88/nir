@@ -8,6 +8,7 @@ import ru.yumeno.nir.dto.DistrictDTO;
 import ru.yumeno.nir.entity.District;
 import ru.yumeno.nir.service.DistrictService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,13 +36,13 @@ public class DistrictController {
 
     @PostMapping(value = "")
     @ApiOperation("Добавлние района")
-    public DistrictDTO addDistrict(@RequestBody DistrictDTO districtDTO) {
+    public DistrictDTO addDistrict(@Valid @RequestBody DistrictDTO districtDTO) {
         return toDistrictDTO(districtService.addDistrict(toDistrict(districtDTO)));
     }
 
     @PutMapping(value = "")
     @ApiOperation("Обновление района")
-    public DistrictDTO updateDistrict(@RequestBody DistrictDTO districtDTO) {
+    public DistrictDTO updateDistrict(@Valid @RequestBody DistrictDTO districtDTO) {
         return toDistrictDTO(districtService.updateDistrict(toDistrict(districtDTO)));
     }
 

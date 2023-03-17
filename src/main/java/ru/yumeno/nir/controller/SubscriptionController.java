@@ -8,6 +8,7 @@ import ru.yumeno.nir.dto.SubscriptionDTO;
 import ru.yumeno.nir.entity.Subscription;
 import ru.yumeno.nir.service.SubscriptionService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,13 +36,13 @@ public class SubscriptionController {
 
     @PostMapping(value = "")
     @ApiOperation("Добавлние подписки")
-    public SubscriptionDTO addSubscription(@RequestBody SubscriptionDTO subscriptionDTO) {
+    public SubscriptionDTO addSubscription(@Valid @RequestBody SubscriptionDTO subscriptionDTO) {
         return toSubscriptionDTO(subscriptionService.addSubscription(toSubscription(subscriptionDTO)));
     }
 
     @PutMapping(value = "")
     @ApiOperation("Обновление подписки")
-    public SubscriptionDTO updateSubscription(@RequestBody SubscriptionDTO subscriptionDTO) {
+    public SubscriptionDTO updateSubscription(@Valid @RequestBody SubscriptionDTO subscriptionDTO) {
         return toSubscriptionDTO(subscriptionService.updateSubscription(toSubscription(subscriptionDTO)));
     }
 
@@ -56,8 +57,7 @@ public class SubscriptionController {
                 .id(subscriptionDTO.getId())
                 .address(subscriptionDTO.getAddress())
                 .tags(subscriptionDTO.getTags())
-                .email(subscriptionDTO.getEmail())
-                .phoneNumber(subscriptionDTO.getPhoneNumber())
+                .chatId(subscriptionDTO.getChatId())
                 .build();
     }
 
@@ -66,8 +66,7 @@ public class SubscriptionController {
                 .id(subscription.getId())
                 .address(subscription.getAddress())
                 .tags(subscription.getTags())
-                .email(subscription.getEmail())
-                .phoneNumber(subscription.getPhoneNumber())
+                .chatId(subscription.getChatId())
                 .build();
     }
 }

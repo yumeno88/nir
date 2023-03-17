@@ -8,6 +8,7 @@ import ru.yumeno.nir.dto.StreetDTO;
 import ru.yumeno.nir.entity.Street;
 import ru.yumeno.nir.service.StreetService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,13 +36,13 @@ public class StreetController {
 
     @PostMapping(value = "")
     @ApiOperation("Добавлние улицы")
-    public StreetDTO addStreet(@RequestBody StreetDTO streetDTO) {
+    public StreetDTO addStreet(@Valid @RequestBody StreetDTO streetDTO) {
         return toStreetDTO(streetService.addStreet(toStreet(streetDTO)));
     }
 
     @PutMapping(value = "")
     @ApiOperation("Обновление улицы")
-    public StreetDTO updateStreet(@RequestBody StreetDTO streetDTO) {
+    public StreetDTO updateStreet(@Valid @RequestBody StreetDTO streetDTO) {
         return toStreetDTO(streetService.updateStreet(toStreet(streetDTO)));
     }
 

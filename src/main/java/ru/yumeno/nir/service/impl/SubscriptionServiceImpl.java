@@ -43,6 +43,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public void deleteSubscription(int id) {
-        subscriptionRepository.deleteById(id);
+        Optional<Subscription> optional = subscriptionRepository.findById(id);
+        if (optional.isPresent()) {
+            subscriptionRepository.deleteById(id);
+        } else {
+            throw new ResourceNotFoundException("Subscription not exist with id : " + id);
+        }
     }
 }

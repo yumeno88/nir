@@ -8,6 +8,7 @@ import ru.yumeno.nir.dto.TagDTO;
 import ru.yumeno.nir.entity.Tag;
 import ru.yumeno.nir.service.TagService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,25 +30,19 @@ public class TagController {
 
     @GetMapping(value = "/{id}")
     @ApiOperation("Получение тега по его id")
-    public TagDTO getTagById(@PathVariable int id) {
+    public TagDTO getTagById(@PathVariable String id) {
         return toTagDTO(tagService.getTagById(id));
     }
 
     @PostMapping(value = "")
     @ApiOperation("Добавлние тега")
-    public TagDTO addTag(@RequestBody TagDTO tagDTO) {
+    public TagDTO addTag(@Valid @RequestBody TagDTO tagDTO) {
         return toTagDTO(tagService.addTag(toTag(tagDTO)));
-    }
-
-    @PutMapping(value = "")
-    @ApiOperation("Обновление тега")
-    public TagDTO updateTag(@RequestBody TagDTO tagDTO) {
-        return toTagDTO(tagService.updateTag(toTag(tagDTO)));
     }
 
     @DeleteMapping(value = "/{id}")
     @ApiOperation("Удаление тега")
-    public void deleteTag(@PathVariable int id) {
+    public void deleteTag(@PathVariable String id) {
         tagService.deleteTag(id);
     }
 

@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -15,17 +15,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Subscription { // TODO change phone and email to telegram account id
+public class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
-    @Email(message = "uncorrect email")
-    private String email;
-    @Column(name = "phone_number")
-    private String phoneNumber; // TODO regex
+    @NotBlank
+    private String chatId;
     @ManyToOne
-    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
-    private Address address;
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address; // TODO mb remove
     @ManyToMany
     @JoinTable(
             name = "subscription_tag",
