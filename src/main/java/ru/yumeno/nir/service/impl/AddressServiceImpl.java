@@ -6,6 +6,7 @@ import ru.yumeno.nir.entity.Address;
 import ru.yumeno.nir.entity.News;
 import ru.yumeno.nir.entity.Subscription;
 import ru.yumeno.nir.exception_handler.exceptions.DeletionFailedException;
+import ru.yumeno.nir.exception_handler.exceptions.ResourceAlreadyExistException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 import ru.yumeno.nir.repository.AddressRepository;
 import ru.yumeno.nir.repository.NewsRepository;
@@ -42,7 +43,18 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address addAddress(Address address) {
-        return addressRepository.save(address);
+        Optional<Address> optional = addressRepository.findByApartmentAndHouseAndPorchAndDistrictAndStreet(
+                address.getApartment(),
+                address.getHouse(),
+                address.getPorch(),
+                address.getDistrict(),
+                address.getStreet()
+        );
+        if (optional.isEmpty()) {
+            return addressRepository.save(address);
+        } else {
+            throw new ResourceAlreadyExistException("Address: " + address + " already exist");
+        }
     }
 
     @Override

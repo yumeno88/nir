@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yumeno.nir.entity.Address;
 import ru.yumeno.nir.entity.District;
 import ru.yumeno.nir.exception_handler.exceptions.DeletionFailedException;
+import ru.yumeno.nir.exception_handler.exceptions.ResourceAlreadyExistException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 import ru.yumeno.nir.repository.AddressRepository;
 import ru.yumeno.nir.repository.DistrictRepository;
@@ -38,7 +39,12 @@ public class DistrictServiceImpl implements DistrictService {
 
     @Override
     public District addDistrict(District district) {
-        return districtRepository.save(district);
+        Optional<District> optional = districtRepository.findByName(district.getName());
+        if (optional.isEmpty()) {
+            return districtRepository.save(district);
+        } else {
+            throw new ResourceAlreadyExistException("District with name = " + district.getName() + " already exist");
+        }
     }
 
     @Override

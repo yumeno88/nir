@@ -2,6 +2,7 @@ package ru.yumeno.nir.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yumeno.nir.dto.NewsRequestDTO;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequestMapping(value = "/news")
 @Api
 @CrossOrigin("*")
+@Slf4j
 public class NewsController {
     private final NewsService newsService;
 
@@ -29,6 +31,7 @@ public class NewsController {
     @GetMapping(value = "")
     @ApiOperation("Получение всех новостей")
     public List<NewsResponseDTO> getAllNews() {
+        log.info("Try to get all news");
         return newsService.getAllNews().stream().map(this::toNewsResponseDTO).toList();
     }
 
@@ -36,30 +39,35 @@ public class NewsController {
     @ApiOperation("Получение всех новостей по тегам")
     public List<NewsResponseDTO> getAllNewsByTags(@RequestParam(name = "tags") List<String> strTags) {
         List<Tag> tags = strTags.stream().map(this::toTag).toList();
+        log.info("Try to get all streets by tags: " + strTags);
         return newsService.getAllNewsByTags(tags).stream().map(this::toNewsResponseDTO).toList();
     }
 
     @GetMapping(value = "/{id}")
     @ApiOperation("Получение новости по ее id")
     public NewsResponseDTO getNewsById(@PathVariable int id) {
+        log.info("Try to get news by id = " + id);
         return toNewsResponseDTO(newsService.getNewsById(id));
     }
 
     @PostMapping(value = "")
     @ApiOperation("Добавлние новости")
     public NewsResponseDTO addNews(@Valid @RequestBody NewsRequestDTO newsRequestDTO) {
+        log.info("Try to add news: " + newsRequestDTO.toString());
         return toNewsResponseDTO(newsService.addNews(toNews(newsRequestDTO)));
     }
 
     @PutMapping(value = "")
     @ApiOperation("Обновление новости")
     public NewsResponseDTO updateNews(@Valid @RequestBody NewsRequestForUpdateDTO newsRequestForUpdateDTO) {
+        log.info("Try to update news: " + newsRequestForUpdateDTO.toString());
         return toNewsResponseDTO(newsService.updateNews(toNewsWithId(newsRequestForUpdateDTO)));
     }
 
     @DeleteMapping(value = "/{id}")
     @ApiOperation("Удаление новости")
     public void deleteNews(@PathVariable int id) {
+        log.info("Try to delete news by id = " + id);
         newsService.deleteNews(id);
     }
 

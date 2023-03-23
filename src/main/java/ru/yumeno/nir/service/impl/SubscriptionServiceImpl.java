@@ -3,6 +3,7 @@ package ru.yumeno.nir.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yumeno.nir.entity.Subscription;
+import ru.yumeno.nir.exception_handler.exceptions.ResourceAlreadyExistException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 import ru.yumeno.nir.repository.SubscriptionRepository;
 import ru.yumeno.nir.service.SubscriptionService;
@@ -33,7 +34,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public Subscription addSubscription(Subscription subscription) {
-        return subscriptionRepository.save(subscription);
+        Optional<Subscription> optional = subscriptionRepository.findByChatId(subscription.getChatId());
+        if (optional.isEmpty()) {
+            return subscriptionRepository.save(subscription);
+        } else {
+            throw new ResourceAlreadyExistException("Subscription with chatId = " + subscription.getChatId() + " already exist");
+        }
     }
 
     @Override

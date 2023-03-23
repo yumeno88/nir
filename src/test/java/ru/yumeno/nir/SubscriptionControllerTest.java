@@ -17,6 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.yumeno.nir.controller.SubscriptionController;
 import ru.yumeno.nir.dto.SubscriptionDTO;
 import ru.yumeno.nir.entity.Tag;
+import ru.yumeno.nir.exception_handler.exceptions.ResourceAlreadyExistException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 
 import java.util.ArrayList;
@@ -98,13 +99,13 @@ class SubscriptionControllerTest {
         tags.add(new Tag("water"));
         this.mockMvc.perform(MockMvcRequestBuilders.post("/subscriptions")
                         .content(asJsonString(SubscriptionDTO.builder()
-                                .chatId("chatId1")
+                                .chatId("chatId")
                                 .tags(tags)
                                 .build()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.chatId", Matchers.equalTo("chatId1")))
+                .andExpect(jsonPath("$.chatId", Matchers.equalTo("chatId")))
                 .andExpect(jsonPath("$.tags[0].name", Matchers.equalTo("water")));
     }
 
@@ -125,6 +126,24 @@ class SubscriptionControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException()
                         instanceof MethodArgumentNotValidException));
+    }
+
+    @Test
+    @Sql(value = {"/sql/add-subscriptions-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"/sql/add-subscriptions-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void addAlreadyExistSubscriptionTest() throws Exception {
+        List<Tag> tags = new ArrayList<>();
+        tags.add(new Tag("water"));
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/subscriptions")
+                        .content(asJsonString(SubscriptionDTO.builder()
+                                .chatId("chatId1")
+                                .tags(tags)
+                                .build()))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException()
+                        instanceof ResourceAlreadyExistException));
     }
 
     @Test

@@ -2,6 +2,7 @@ package ru.yumeno.nir.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yumeno.nir.dto.TagDTO;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/tags")
 @Api
+@Slf4j
 public class TagController {
     private final TagService tagService;
 
@@ -25,24 +27,28 @@ public class TagController {
     @GetMapping(value = "")
     @ApiOperation("Получение всех тегов")
     public List<TagDTO> getAllTags() {
+        log.info("Try to get all tags");
         return tagService.getAllTags().stream().map(this::toTagDTO).toList();
     }
 
     @GetMapping(value = "/{id}")
     @ApiOperation("Получение тега по его id")
     public TagDTO getTagById(@PathVariable String id) {
+        log.info("Try to get tag by id = " + id);
         return toTagDTO(tagService.getTagById(id));
     }
 
     @PostMapping(value = "")
     @ApiOperation("Добавлние тега")
     public TagDTO addTag(@Valid @RequestBody TagDTO tagDTO) {
+        log.info("Try to add tag: " + tagDTO.toString());
         return toTagDTO(tagService.addTag(toTag(tagDTO)));
     }
 
     @DeleteMapping(value = "/{id}")
     @ApiOperation("Удаление тега")
     public void deleteTag(@PathVariable String id) {
+        log.info("Try to delete tag by id = " + id);
         tagService.deleteTag(id);
     }
 

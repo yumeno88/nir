@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yumeno.nir.entity.Address;
 import ru.yumeno.nir.entity.Street;
 import ru.yumeno.nir.exception_handler.exceptions.DeletionFailedException;
+import ru.yumeno.nir.exception_handler.exceptions.ResourceAlreadyExistException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 import ru.yumeno.nir.repository.AddressRepository;
 import ru.yumeno.nir.repository.StreetRepository;
@@ -38,7 +39,12 @@ public class StreetServiceImpl implements StreetService {
 
     @Override
     public Street addStreet(Street street) {
-        return streetRepository.save(street);
+        Optional<Street> optional = streetRepository.findByName(street.getName());
+        if (optional.isEmpty()) {
+            return streetRepository.save(street);
+        } else {
+            throw new ResourceAlreadyExistException("Street with name = " + street.getName() + " already exist");
+        }
     }
 
     @Override

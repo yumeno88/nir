@@ -18,6 +18,7 @@ import ru.yumeno.nir.controller.DistrictController;
 import ru.yumeno.nir.dto.DistrictDTO;
 import ru.yumeno.nir.dto.StreetDTO;
 import ru.yumeno.nir.exception_handler.exceptions.DeletionFailedException;
+import ru.yumeno.nir.exception_handler.exceptions.ResourceAlreadyExistException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 
 import java.util.Objects;
@@ -111,6 +112,19 @@ class DistrictControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException()
                         instanceof MethodArgumentNotValidException));
+    }
+
+    @Test
+    @Sql(value = {"/sql/add-districts-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"/sql/add-districts-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void addAlreadyExistDistrictTest() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/districts")
+                        .content(asJsonString(DistrictDTO.builder().name("district1").build()))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException()
+                        instanceof ResourceAlreadyExistException));
     }
 
     @Test

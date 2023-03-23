@@ -19,6 +19,7 @@ import ru.yumeno.nir.dto.AddressDTO;
 import ru.yumeno.nir.entity.District;
 import ru.yumeno.nir.entity.Street;
 import ru.yumeno.nir.exception_handler.exceptions.DeletionFailedException;
+import ru.yumeno.nir.exception_handler.exceptions.ResourceAlreadyExistException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 
 import java.util.Objects;
@@ -137,6 +138,27 @@ class AddressControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException()
                         instanceof MethodArgumentNotValidException));
+    }
+
+    @Test
+    @Sql(value = {"/sql/add-addresses-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"/sql/add-addresses-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void addAlreadyExistAddressTest() throws Exception {
+        Street street = new Street(5, "street");
+        District district = new District(4, "district");
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/addresses")
+                        .content(asJsonString(AddressDTO.builder()
+                                .apartment("apart1")
+                                .house("house1")
+                                .porch("porch1")
+                                .street(street)
+                                .district(district)
+                                .build()))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException()
+                        instanceof ResourceAlreadyExistException));
     }
 
     @Test
