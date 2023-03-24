@@ -68,7 +68,7 @@ class StreetControllerTest {
     @Sql(value = {"/sql/add-streets-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(value = {"/sql/add-streets-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getStreetByIdTest() throws Exception {
-        int id = 4;
+        int id = 50;
         this.mockMvc.perform(get("/streets/" + id))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -164,7 +164,7 @@ class StreetControllerTest {
     @Sql(value = {"/sql/add-streets-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(value = {"/sql/add-streets-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void deleteStreetByIdTest() throws Exception {
-        int id = 5;
+        int id = 54;
         this.mockMvc.perform(get("/streets/" + id))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -187,7 +187,7 @@ class StreetControllerTest {
     @Sql(value = {"/sql/add-streets-and-districts-with-ref-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(value = {"/sql/add-streets-and-districts-with-ref-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void deleteHasRefStreetByIdTest() throws Exception {
-        int id = 4;
+        int id = 5;
         this.mockMvc.perform(delete("/streets/" + id))
                 .andDo(print())
                 .andExpect(status().isNotAcceptable())

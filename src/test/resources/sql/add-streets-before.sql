@@ -2,5 +2,5 @@ delete
 from street;
 
 insert into street (id, name)
-values (4, 'street1'),
-       (5, 'street2');
+values (50, 'street1'),
+       (54, 'street2');
