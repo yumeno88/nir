@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yumeno.nir.entity.Address;
 import ru.yumeno.nir.entity.News;
 import ru.yumeno.nir.entity.Subscription;
+import ru.yumeno.nir.exception_handler.exceptions.AdditionFailedException;
 import ru.yumeno.nir.exception_handler.exceptions.DeletionFailedException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceAlreadyExistException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
@@ -43,6 +44,9 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address addAddress(Address address) {
+        if (address.getId() != 0) {
+            throw new AdditionFailedException("Address with id cannot be added");
+        }
         Optional<Address> optional = addressRepository.findByApartmentAndHouseAndPorchAndDistrictAndStreet(
                 address.getApartment(),
                 address.getHouse(),

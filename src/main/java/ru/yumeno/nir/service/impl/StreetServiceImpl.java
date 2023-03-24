@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yumeno.nir.entity.Address;
 import ru.yumeno.nir.entity.Street;
+import ru.yumeno.nir.exception_handler.exceptions.AdditionFailedException;
 import ru.yumeno.nir.exception_handler.exceptions.DeletionFailedException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceAlreadyExistException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
@@ -39,6 +40,9 @@ public class StreetServiceImpl implements StreetService {
 
     @Override
     public Street addStreet(Street street) {
+        if (street.getId() != 0) {
+            throw new AdditionFailedException("Street with id cannot be added");
+        }
         Optional<Street> optional = streetRepository.findByName(street.getName());
         if (optional.isEmpty()) {
             return streetRepository.save(street);

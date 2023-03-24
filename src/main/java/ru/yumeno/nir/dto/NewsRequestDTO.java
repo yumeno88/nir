@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class NewsRequestDTO {
+    private int id;
     @NotBlank(message = "News header cannot be null")
     @Size(min = 5, message = "News header length cannot be shorter than 5 characters")
     private String header;
@@ -25,6 +27,7 @@ public class NewsRequestDTO {
     private String body;
     @NotNull
     private List<Tag> tags;
+    private LocalDateTime createDate;
     //    private List<Address> addresses; // TODO mb remove addresses
     @NotBlank(message = "Image url cannot be null")
     private String imageUrl;

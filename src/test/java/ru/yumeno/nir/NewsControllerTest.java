@@ -16,8 +16,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.yumeno.nir.controller.NewsController;
 import ru.yumeno.nir.dto.NewsRequestDTO;
-import ru.yumeno.nir.dto.NewsRequestForUpdateDTO;
 import ru.yumeno.nir.entity.Tag;
+import ru.yumeno.nir.exception_handler.exceptions.AdditionFailedException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 
 import java.util.ArrayList;
@@ -152,11 +152,34 @@ class NewsControllerTest {
     @Test
     @Sql(value = {"/sql/add-news-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(value = {"/sql/add-news-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void addNewsWithIdTest() throws Exception {
+        List<Tag> tags = new ArrayList<>();
+        tags.add(new Tag("water"));
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/news")
+                        .content(asJsonString(NewsRequestDTO.builder()
+                                .id(1)
+                                .header("заголовок")
+                                .body("тело")
+                                .imageUrl("url")
+                                .tags(tags)
+                                .build())
+                        )
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof AdditionFailedException))
+                .andExpect(result -> assertEquals("News with id cannot be added",
+                        Objects.requireNonNull(result.getResolvedException()).getMessage()));
+    }
+
+    @Test
+    @Sql(value = {"/sql/add-news-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"/sql/add-news-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateValidNewsTest() throws Exception {
         List<Tag> tags = new ArrayList<>();
         tags.add(new Tag("gas"));
         this.mockMvc.perform(MockMvcRequestBuilders.put("/news")
-                        .content(asJsonString(NewsRequestForUpdateDTO.builder()
+                        .content(asJsonString(NewsRequestDTO.builder()
                                 .id(4)
                                 .header("заголовок")
                                 .body("тело")
@@ -178,7 +201,7 @@ class NewsControllerTest {
     @Sql(value = {"/sql/add-news-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateInvalidNewsTest() throws Exception { // TODO not passed
         this.mockMvc.perform(MockMvcRequestBuilders.put("/news")
-                        .content(asJsonString(NewsRequestForUpdateDTO.builder()
+                        .content(asJsonString(NewsRequestDTO.builder()
                                 .id(4)
                                 .header("header")
                                 .body("body")

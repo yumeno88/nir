@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yumeno.nir.dto.NewsRequestDTO;
-import ru.yumeno.nir.dto.NewsRequestForUpdateDTO;
 import ru.yumeno.nir.dto.NewsResponseDTO;
 import ru.yumeno.nir.entity.News;
 import ru.yumeno.nir.entity.Tag;
@@ -59,9 +58,9 @@ public class NewsController {
 
     @PutMapping(value = "")
     @ApiOperation("Обновление новости")
-    public NewsResponseDTO updateNews(@Valid @RequestBody NewsRequestForUpdateDTO newsRequestForUpdateDTO) {
-        log.info("Try to update news: " + newsRequestForUpdateDTO.toString());
-        return toNewsResponseDTO(newsService.updateNews(toNewsWithId(newsRequestForUpdateDTO)));
+    public NewsResponseDTO updateNews(@Valid @RequestBody NewsRequestDTO newsRequestDTO) {
+        log.info("Try to update news: " + newsRequestDTO.toString());
+        return toNewsResponseDTO(newsService.updateNews(toNews(newsRequestDTO)));
     }
 
     @DeleteMapping(value = "/{id}")
@@ -73,21 +72,12 @@ public class NewsController {
 
     private News toNews(NewsRequestDTO newsRequestDTO) {
         return News.builder()
+                .id(newsRequestDTO.getId())
                 .header(newsRequestDTO.getHeader())
                 .body(newsRequestDTO.getBody())
                 .tags(newsRequestDTO.getTags())
+                .createDate(newsRequestDTO.getCreateDate())
                 .imageUrl(newsRequestDTO.getImageUrl())
-                .build();
-    }
-
-    private News toNewsWithId(NewsRequestForUpdateDTO newsRequestForUpdateDTO) {
-        return News.builder()
-                .id(newsRequestForUpdateDTO.getId())
-                .header(newsRequestForUpdateDTO.getHeader())
-                .body(newsRequestForUpdateDTO.getBody())
-                .tags(newsRequestForUpdateDTO.getTags())
-                .createDate(newsRequestForUpdateDTO.getCreateDate())
-                .imageUrl(newsRequestForUpdateDTO.getImageUrl())
                 .build();
     }
 

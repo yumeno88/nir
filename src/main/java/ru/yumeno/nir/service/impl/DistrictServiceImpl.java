@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yumeno.nir.entity.Address;
 import ru.yumeno.nir.entity.District;
+import ru.yumeno.nir.exception_handler.exceptions.AdditionFailedException;
 import ru.yumeno.nir.exception_handler.exceptions.DeletionFailedException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceAlreadyExistException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
@@ -39,6 +40,9 @@ public class DistrictServiceImpl implements DistrictService {
 
     @Override
     public District addDistrict(District district) {
+        if (district.getId() != 0) {
+            throw new AdditionFailedException("District with id cannot be added");
+        }
         Optional<District> optional = districtRepository.findByName(district.getName());
         if (optional.isEmpty()) {
             return districtRepository.save(district);

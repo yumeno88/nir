@@ -17,6 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.yumeno.nir.controller.SubscriptionController;
 import ru.yumeno.nir.dto.SubscriptionDTO;
 import ru.yumeno.nir.entity.Tag;
+import ru.yumeno.nir.exception_handler.exceptions.AdditionFailedException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceAlreadyExistException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 
@@ -144,6 +145,26 @@ class SubscriptionControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException()
                         instanceof ResourceAlreadyExistException));
+    }
+
+    @Test
+    @Sql(value = {"/sql/add-subscriptions-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"/sql/add-subscriptions-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void addSubscriptionWithIdTest() throws Exception {
+        List<Tag> tags = new ArrayList<>();
+        tags.add(new Tag("water"));
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/subscriptions")
+                        .content(asJsonString(SubscriptionDTO.builder()
+                                .id(1)
+                                .chatId("chatId")
+                                .tags(tags)
+                                .build()))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof AdditionFailedException))
+                .andExpect(result -> assertEquals("Subscription with id cannot be added",
+                        Objects.requireNonNull(result.getResolvedException()).getMessage()));
     }
 
     @Test

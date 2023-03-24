@@ -17,6 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.yumeno.nir.controller.DistrictController;
 import ru.yumeno.nir.dto.DistrictDTO;
 import ru.yumeno.nir.dto.StreetDTO;
+import ru.yumeno.nir.exception_handler.exceptions.AdditionFailedException;
 import ru.yumeno.nir.exception_handler.exceptions.DeletionFailedException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceAlreadyExistException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
@@ -112,6 +113,20 @@ class DistrictControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException()
                         instanceof MethodArgumentNotValidException));
+    }
+
+    @Test
+    @Sql(value = {"/sql/add-districts-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"/sql/add-districts-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void addDistrictWithIdTest() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/districts")
+                        .content(asJsonString(DistrictDTO.builder().id(1).name("district3").build()))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof AdditionFailedException))
+                .andExpect(result -> assertEquals("District with id cannot be added",
+                        Objects.requireNonNull(result.getResolvedException()).getMessage()));
     }
 
     @Test

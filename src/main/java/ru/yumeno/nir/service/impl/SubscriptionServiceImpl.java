@@ -3,6 +3,7 @@ package ru.yumeno.nir.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yumeno.nir.entity.Subscription;
+import ru.yumeno.nir.exception_handler.exceptions.AdditionFailedException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceAlreadyExistException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 import ru.yumeno.nir.repository.SubscriptionRepository;
@@ -34,6 +35,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public Subscription addSubscription(Subscription subscription) {
+        if (subscription.getId() != 0) {
+            throw new AdditionFailedException("Subscription with id cannot be added");
+        }
         Optional<Subscription> optional = subscriptionRepository.findByChatId(subscription.getChatId());
         if (optional.isEmpty()) {
             return subscriptionRepository.save(subscription);

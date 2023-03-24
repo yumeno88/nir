@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yumeno.nir.entity.News;
 import ru.yumeno.nir.entity.Tag;
+import ru.yumeno.nir.exception_handler.exceptions.AdditionFailedException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 import ru.yumeno.nir.repository.NewsRepository;
 import ru.yumeno.nir.service.NewsService;
@@ -36,6 +37,9 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public News addNews(News news) {
+        if (news.getId() != 0) {
+            throw new AdditionFailedException("News with id cannot be added");
+        }
         return newsRepository.save(news);
     }
 
