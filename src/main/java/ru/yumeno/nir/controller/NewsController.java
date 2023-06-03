@@ -5,10 +5,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yumeno.nir.dto.NewsRabbitDTO;
 import ru.yumeno.nir.dto.NewsRequestDTO;
 import ru.yumeno.nir.dto.NewsResponseDTO;
 import ru.yumeno.nir.entity.News;
 import ru.yumeno.nir.entity.Tag;
+import ru.yumeno.nir.service.NewsProducer;
 import ru.yumeno.nir.service.NewsService;
 
 import javax.validation.Valid;
@@ -21,10 +23,12 @@ import java.util.List;
 @Slf4j
 public class NewsController {
     private final NewsService newsService;
+    private final NewsProducer newsProducer;
 
     @Autowired
-    public NewsController(NewsService newsService) {
+    public NewsController(NewsService newsService, NewsProducer newsProducer) {
         this.newsService = newsService;
+        this.newsProducer = newsProducer;
     }
 
     @GetMapping(value = "")
@@ -53,7 +57,10 @@ public class NewsController {
     @ApiOperation("Добавлние новости")
     public NewsResponseDTO addNews(@Valid @RequestBody NewsRequestDTO newsRequestDTO) {
         log.info("Try to add news: " + newsRequestDTO.toString());
-        return toNewsResponseDTO(newsService.addNews(toNews(newsRequestDTO)));
+        News news = newsService.addNews(toNews(newsRequestDTO));
+        NewsRabbitDTO newsRabbitDTO = toNewsRabbitDTO(news);
+        newsProducer.produce("news", newsRabbitDTO);
+        return toNewsResponseDTO(news);
     }
 
     @PutMapping(value = "")
@@ -87,6 +94,17 @@ public class NewsController {
                 .header(news.getHeader())
                 .body(news.getBody())
                 .createDate(news.getCreateDate())
+                .tags(news.getTags())
+                .imageUrl(news.getImageUrl())
+                .build();
+    }
+
+    private NewsRabbitDTO toNewsRabbitDTO(News news) {
+        return NewsRabbitDTO.builder()
+                .id(news.getId())
+                .header(news.getHeader())
+                .body(news.getBody())
+                .createDate(news.getCreateDate().toString())
                 .tags(news.getTags())
                 .imageUrl(news.getImageUrl())
                 .build();

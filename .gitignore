@@ -20,3 +20,5 @@ mvnw.cmd
 *.iws
 *.iml
 *.ipr
+/logs/
+/.mvn/

@@ -22,6 +22,7 @@
         <postgresql.version>42.2.27</postgresql.version>
         <swagger.version>3.0.0</swagger.version>
         <log4j.version>2.20.0</log4j.version>
+        <amqp.version>3.1.0</amqp.version>
     </properties>
 
     <dependencies>
@@ -49,6 +50,14 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
@@ -73,16 +82,16 @@
             <version>${swagger.version}</version>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.logging.log4j</groupId>-->
-        <!--            <artifactId>log4j-core</artifactId>-->
-        <!--            <version>${log4j.version}</version>-->
-        <!--        </dependency>-->
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+            <version>${amqp.version}</version>
         </dependency>
     </dependencies>
 

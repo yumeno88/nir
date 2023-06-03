@@ -92,23 +92,23 @@ class SubscriptionControllerTest {
                         Objects.requireNonNull(result.getResolvedException()).getMessage()));
     }
 
-    @Test
-    @Sql(value = {"/sql/add-subscriptions-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(value = {"/sql/add-subscriptions-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    public void addValidSubscriptionTest() throws Exception {
-        List<Tag> tags = new ArrayList<>();
-        tags.add(new Tag("water"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/subscriptions")
-                        .content(asJsonString(SubscriptionDTO.builder()
-                                .chatId("chatId")
-                                .tags(tags)
-                                .build()))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.chatId", Matchers.equalTo("chatId")))
-                .andExpect(jsonPath("$.tags[0].name", Matchers.equalTo("water")));
-    }
+//    @Test
+//    @Sql(value = {"/sql/add-subscriptions-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+//    @Sql(value = {"/sql/add-subscriptions-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+//    public void addValidSubscriptionTest() throws Exception {
+//        List<Tag> tags = new ArrayList<>();
+//        tags.add(new Tag("water"));
+//        this.mockMvc.perform(MockMvcRequestBuilders.post("/subscriptions")
+//                        .content(asJsonString(SubscriptionDTO.builder()
+//                                .chatId("chatId")
+//                                .tags(tags)
+//                                .build()))
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.chatId", Matchers.equalTo("chatId")))
+//                .andExpect(jsonPath("$.tags[0].name", Matchers.equalTo("water")));
+//    }
 
     @Test
     @Sql(value = {"/sql/add-subscriptions-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)

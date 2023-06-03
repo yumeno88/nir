@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  app-backend:
+    build: ./
+    container_name: 'app-backend'
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+      - rabbitmq
+      - redis
+
+  postgres:
+    image: 'postgres:13.1-alpine'
+    container_name: 'postgres'
+    ports:
+      - '5432:5432'
+    environment:
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=users'
+      - 'POSTGRES_DB=nir'
+    volumes:
+      - 'db_storage:/var/lib/postgresql/data'
+
+  rabbitmq:
+    container_name: 'rabbitmq'
+    image: 'rabbitmq:3-management'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: 'guest'
+      RABBITMQ_DEFAULT_PASS: 'guest'
+
+  redis:
+    hostname: redis
+    restart: always
+    container_name: redis
+    image: 'redis'
+    ports:
+      - "6379:6379"
+    volumes:
+      - 'redis_storage:/data'
+
+volumes:
+  db_storage:
+  redis_storage:

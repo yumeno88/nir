@@ -52,6 +52,7 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ResourceErrorDTO> handleException(Exception e) {
         ResourceErrorDTO resourceErrorDTO = new ResourceErrorDTO(e.getMessage());
         log.warn("Exception, message: " + e.getMessage());
+        e.printStackTrace();
         return new ResponseEntity<>(resourceErrorDTO, HttpStatus.BAD_REQUEST);
     }
 
