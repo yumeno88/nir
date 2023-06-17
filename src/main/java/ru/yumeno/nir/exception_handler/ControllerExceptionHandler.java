@@ -3,6 +3,7 @@ package ru.yumeno.nir.exception_handler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -49,14 +50,6 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ResourceErrorDTO> handleException(Exception e) {
-        ResourceErrorDTO resourceErrorDTO = new ResourceErrorDTO(e.getMessage());
-        log.warn("Exception, message: " + e.getMessage());
-        e.printStackTrace();
-        return new ResponseEntity<>(resourceErrorDTO, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
     public ResponseEntity<Map<String, String>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -67,5 +60,20 @@ public class ControllerExceptionHandler {
             log.warn("ValidationException, message: " + error.getDefaultMessage());
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ResourceErrorDTO> handleException(BadCredentialsException e) {
+        ResourceErrorDTO resourceErrorDTO = new ResourceErrorDTO(e.getMessage());
+        log.warn("BadCredentialsException, message: " + e.getMessage());
+        return new ResponseEntity<>(resourceErrorDTO, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ResourceErrorDTO> handleException(Exception e) {
+        ResourceErrorDTO resourceErrorDTO = new ResourceErrorDTO(e.getMessage());
+        log.warn("Exception, message: " + e.getMessage());
+        e.printStackTrace();
+        return new ResponseEntity<>(resourceErrorDTO, HttpStatus.BAD_REQUEST);
     }
 }

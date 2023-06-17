@@ -7,9 +7,11 @@ services:
     ports:
       - '8080:8080'
     depends_on:
-      - postgres
-      - rabbitmq
-      - redis
+      - 'postgres'
+      - 'rabbitmq'
+    #      - redis
+    environment:
+      SPRING_PROFILES_ACTIVE: docker-compose
 
   postgres:
     image: 'postgres:13.1-alpine'
@@ -33,16 +35,16 @@ services:
       RABBITMQ_DEFAULT_USER: 'guest'
       RABBITMQ_DEFAULT_PASS: 'guest'
 
-  redis:
-    hostname: redis
-    restart: always
-    container_name: redis
-    image: 'redis'
-    ports:
-      - "6379:6379"
-    volumes:
-      - 'redis_storage:/data'
+#  redis:
+#    hostname: redis
+#    restart: always
+#    container_name: redis
+#    image: 'redis'
+#    ports:
+#      - "6379:6379"
+#    volumes:
+#      - 'redis_storage:/data'
 
 volumes:
   db_storage:
-  redis_storage:
+#  redis_storage:

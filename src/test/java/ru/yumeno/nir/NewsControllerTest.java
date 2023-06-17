@@ -107,28 +107,28 @@ class NewsControllerTest {
                         Objects.requireNonNull(result.getResolvedException()).getMessage()));
     }
 
-//    @Test
-//    @Sql(value = {"/sql/add-news-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-//    @Sql(value = {"/sql/add-news-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-//    public void addValidNewsTest() throws Exception {
-//        List<Tag> tags = new ArrayList<>();
-//        tags.add(new Tag("water"));
-//        this.mockMvc.perform(MockMvcRequestBuilders.post("/news")
-//                        .content(asJsonString(NewsRequestDTO.builder()
-//                                .header("заголовок")
-//                                .body("тело")
-//                                .imageUrl("url")
-//                                .tags(tags)
-//                                .build())
-//                        )
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.header", Matchers.equalTo("заголовок")))
-//                .andExpect(jsonPath("$.body", Matchers.equalTo("тело")))
-//                .andExpect(jsonPath("$.tags[0].name", Matchers.equalTo("water")))
-//                .andExpect(jsonPath("$.imageUrl", Matchers.equalTo("url")));
-//    }
+    @Test
+    @Sql(value = {"/sql/add-news-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"/sql/add-news-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void addValidNewsTest() throws Exception {
+        List<Tag> tags = new ArrayList<>();
+        tags.add(new Tag("water"));
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/news")
+                        .content(asJsonString(NewsRequestDTO.builder()
+                                .header("заголовок")
+                                .body("тело")
+                                .imageUrl("url")
+                                .tags(tags)
+                                .build())
+                        )
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.header", Matchers.equalTo("заголовок")))
+                .andExpect(jsonPath("$.body", Matchers.equalTo("тело")))
+                .andExpect(jsonPath("$.tags[0].name", Matchers.equalTo("water")))
+                .andExpect(jsonPath("$.imageUrl", Matchers.equalTo("url")));
+    }
 
     @Test
     @Sql(value = {"/sql/add-news-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
