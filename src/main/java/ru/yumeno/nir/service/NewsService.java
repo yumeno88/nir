@@ -3,6 +3,7 @@ package ru.yumeno.nir.service;
 import ru.yumeno.nir.entity.News;
 import ru.yumeno.nir.entity.Tag;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface NewsService {
@@ -17,4 +18,8 @@ public interface NewsService {
     void deleteNews(int id);
 
     List<News> getAllNewsByTags(List<Tag> tags);
+
+    List<News> getAllNewsByDateBetween(LocalDateTime start, LocalDateTime end);
+
+    List<News> getAllByTagsDateLimit(List<Tag> tags, int limit);
 }

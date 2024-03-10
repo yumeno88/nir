@@ -65,9 +65,9 @@ public class UserService implements UserDetailsService {
         User user = new User();
         user.setUsername(registrationUserDTO.getUsername());
         user.setPassword(passwordEncoder.encode(registrationUserDTO.getPassword()));
-        Optional<Role> optionalRole = roleRepository.findByName("ROLE_USER");
+        Optional<Role> optionalRole = roleRepository.findByName("ROLE_ADMIN");
         if (optionalRole.isPresent()) {
-            user.setRoles(List.of(roleRepository.findByName("ROLE_USER").get()));
+            user.setRoles(List.of(roleRepository.findByName("ROLE_ADMIN").get()));
             return userRepository.save(user);
         } else {
             throw new ResourceNotFoundException("Роль с именем ROLE_USER не найдена");

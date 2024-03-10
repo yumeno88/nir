@@ -14,6 +14,7 @@ import ru.yumeno.nir.service.NewsProducer;
 import ru.yumeno.nir.service.NewsService;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -58,8 +59,8 @@ public class NewsController {
     public NewsResponseDTO addNews(@Valid @RequestBody NewsRequestDTO newsRequestDTO) {
         log.info("Try to add news: " + newsRequestDTO.toString());
         News news = newsService.addNews(toNews(newsRequestDTO));
-        NewsRabbitDTO newsRabbitDTO = toNewsRabbitDTO(news);
-        newsProducer.produce("news", newsRabbitDTO);
+//        NewsRabbitDTO newsRabbitDTO = toNewsRabbitDTO(news);
+//        newsProducer.produce("news", newsRabbitDTO);
         return toNewsResponseDTO(news);
     }
 
@@ -75,6 +76,25 @@ public class NewsController {
     public void deleteNews(@PathVariable int id) {
         log.info("Try to delete news by id = " + id);
         newsService.deleteNews(id);
+    }
+
+    @GetMapping(value = "/sort_date")
+    @ApiOperation("Получение всех новостей по дате")
+    public List<NewsResponseDTO> getAllNewsByDateBetween(@RequestParam(name = "start") String start,
+                                                         @RequestParam(name = "end") String end) {
+        log.info("Try to get all news by date between: " + start + ", " + end);
+        LocalDateTime startDate = LocalDateTime.parse(start + "T00:00:00");
+        LocalDateTime endDate = LocalDateTime.parse(end + "T00:00:00");
+        return newsService.getAllNewsByDateBetween(startDate, endDate).stream().map(this::toNewsResponseDTO).toList();
+    }
+
+    @GetMapping(value = "/sort_all")
+    @ApiOperation("Получение всех новостей по тегам, дате с лимитом")
+    public List<NewsResponseDTO> getAllNewsByTagsDateLimit(@RequestParam(name = "tags") List<String> strTags,
+                                                           @RequestParam(name = "limit") int limit) {
+        List<Tag> tags = strTags.stream().map(this::toTag).toList();
+        log.info("Try to get all news by tags and date with limit: " + strTags);
+        return newsService.getAllByTagsDateLimit(tags, limit).stream().map(this::toNewsResponseDTO).toList();
     }
 
     private News toNews(NewsRequestDTO newsRequestDTO) {
