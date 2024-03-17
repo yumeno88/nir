@@ -22,4 +22,6 @@ public interface NewsService {
     List<News> getAllNewsByDateBetween(LocalDateTime start, LocalDateTime end);
 
     List<News> getAllByTagsDateLimit(List<Tag> tags, int limit);
+
+    void writeExcel(List<Tag> tags, LocalDateTime startDate, LocalDateTime endDate, int limit);
 }

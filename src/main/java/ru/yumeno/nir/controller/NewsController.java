@@ -97,6 +97,19 @@ public class NewsController {
         return newsService.getAllByTagsDateLimit(tags, limit).stream().map(this::toNewsResponseDTO).toList();
     }
 
+    @GetMapping(value = "/report")
+    @ApiOperation("Запись отчетов в excel-файл")
+    public void writeReports(@RequestParam(name = "tags") List<String> strTags,
+                             @RequestParam(name = "start") String start,
+                             @RequestParam(name = "end") String end,
+                             @RequestParam(name = "limit") int limit) {
+        log.info("Try to write reports");
+        List<Tag> tags = strTags.stream().map(this::toTag).toList();
+        LocalDateTime startDate = LocalDateTime.parse(start + "T00:00:00");
+        LocalDateTime endDate = LocalDateTime.parse(end + "T00:00:00");
+        newsService.writeExcel(tags, startDate, endDate, limit);
+    }
+
     private News toNews(NewsRequestDTO newsRequestDTO) {
         return News.builder()
                 .id(newsRequestDTO.getId())

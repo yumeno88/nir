@@ -1,28 +1,35 @@
 package ru.yumeno.nir.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.yumeno.nir.entity.News;
 import ru.yumeno.nir.entity.Tag;
 import ru.yumeno.nir.exception_handler.exceptions.AdditionFailedException;
 import ru.yumeno.nir.exception_handler.exceptions.ResourceNotFoundException;
 import ru.yumeno.nir.repository.NewsRepository;
+import ru.yumeno.nir.security.entity.User;
+import ru.yumeno.nir.security.service.UserService;
 import ru.yumeno.nir.service.NewsService;
+import ru.yumeno.nir.utils.ExcelWriter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
+    private final ExcelWriter excelWriter;
+    private final UserService userService;
 
     @Autowired
-    public NewsServiceImpl(NewsRepository newsRepository) {
+    public NewsServiceImpl(NewsRepository newsRepository, ExcelWriter excelWriter, UserService userService) {
         this.newsRepository = newsRepository;
+        this.excelWriter = excelWriter;
+        this.userService = userService;
     }
 
     @Override
@@ -75,5 +82,26 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<News> getAllByTagsDateLimit(List<Tag> tags, int limit) {
         return newsRepository.findAllByTagsIn(tags, limit);
+    }
+
+    @Override
+    public void writeExcel(List<Tag> tags, LocalDateTime startDate, LocalDateTime endDate, int limit) {
+        List<News> allNews = getAllNews();
+        excelWriter.writeNews(allNews, "allNews");
+
+        List<News> tagsNews = getAllNewsByTags(tags);
+        excelWriter.writeNews(tagsNews, "tagsNews");
+
+        List<News> dateNews = getAllNewsByDateBetween(startDate, endDate);
+        excelWriter.writeNews(dateNews, "dateNews");
+
+        List<News> sortNews = getAllByTagsDateLimit(tags, limit);
+        excelWriter.writeNews(sortNews, "sortNews");
+
+        String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getUserByUsername(username);
+        excelWriter.writeUser(user);
+
+        excelWriter.writeFile();
     }
 }
