@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/news")
@@ -96,10 +97,13 @@ public class NewsController {
     @GetMapping(value = "/sort_all")
     @ApiOperation("Получение всех новостей по тегам, дате с лимитом")
     public List<NewsResponseDTO> getAllNewsByTagsDateLimit(@RequestParam(name = "tags") List<String> strTags,
-                                                           @RequestParam(name = "limit") int limit) {
+                                                           @RequestParam(name = "limit") String limit) {
         List<Tag> tags = strTags.stream().map(this::toTag).toList();
-        log.info("Try to get all news by tags and date with limit: " + strTags);
-        return newsService.getAllByTagsDateLimit(tags, limit).stream().map(this::toNewsResponseDTO).toList();
+        int limitInt = 100;
+        if (!Objects.equals(limit, "null")) {
+            limitInt = Integer.parseInt(limit);
+        }
+        return newsService.getAllByTagsDateLimit(tags, limitInt).stream().map(this::toNewsResponseDTO).toList();
     }
 
     @GetMapping(value = "/report")
@@ -107,12 +111,22 @@ public class NewsController {
     public String writeReports(@RequestParam(name = "tags") List<String> strTags,
                              @RequestParam(name = "start") String start,
                              @RequestParam(name = "end") String end,
-                             @RequestParam(name = "limit") int limit) throws IOException {
-        log.info("Try to write reports");
+                             @RequestParam(name = "limit") String limit) throws IOException {
+        log.info("Try to write reports with start: " + start);
+        int limitInt = 100;
+        if (!Objects.equals(limit, "null")) {
+            limitInt = Integer.parseInt(limit);
+        }
+        if (Objects.equals(start.trim(), "")) {
+            start = "2020-01-01";
+        }
+        if (Objects.equals(end.trim(), "")) {
+            end = "2050-01-01";
+        }
         List<Tag> tags = strTags.stream().map(this::toTag).toList();
         LocalDateTime startDate = LocalDateTime.parse(start + "T00:00:00");
         LocalDateTime endDate = LocalDateTime.parse(end + "T00:00:00");
-        File file = newsService.writeExcel(tags, startDate, endDate, limit);
+        File file = newsService.writeExcel(tags, startDate, endDate, limitInt);
 
         return fileService.generateFileToken(file.getAbsolutePath());
     }
