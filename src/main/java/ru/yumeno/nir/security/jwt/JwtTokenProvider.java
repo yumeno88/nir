@@ -44,6 +44,23 @@ public class JwtTokenProvider {
         return getAllClaimsFromToken(token).get("roles", List.class);
     }
 
+    public String getUncPathFromToken(String token) {
+        return getAllClaimsFromToken(token).get("uncPath", String.class);
+    }
+
+    public String generateFileToken(String uncPath, Duration jwtLifeTime) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("uncPath", uncPath);
+        Date issuedDate = new Date();
+        Date expiredDate = new Date(issuedDate.getTime() + jwtLifeTime.toMillis());
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(issuedDate)
+                .setExpiration(expiredDate)
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
+
     public Claims getAllClaimsFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(secret)

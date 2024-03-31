@@ -10,10 +10,13 @@ import ru.yumeno.nir.dto.NewsRequestDTO;
 import ru.yumeno.nir.dto.NewsResponseDTO;
 import ru.yumeno.nir.entity.News;
 import ru.yumeno.nir.entity.Tag;
+import ru.yumeno.nir.service.FileService;
 import ru.yumeno.nir.service.NewsProducer;
 import ru.yumeno.nir.service.NewsService;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,11 +28,13 @@ import java.util.List;
 public class NewsController {
     private final NewsService newsService;
     private final NewsProducer newsProducer;
+    private final FileService fileService;
 
     @Autowired
-    public NewsController(NewsService newsService, NewsProducer newsProducer) {
+    public NewsController(NewsService newsService, NewsProducer newsProducer, FileService fileService) {
         this.newsService = newsService;
         this.newsProducer = newsProducer;
+        this.fileService = fileService;
     }
 
     @GetMapping(value = "")
@@ -99,15 +104,17 @@ public class NewsController {
 
     @GetMapping(value = "/report")
     @ApiOperation("Запись отчетов в excel-файл")
-    public void writeReports(@RequestParam(name = "tags") List<String> strTags,
+    public String writeReports(@RequestParam(name = "tags") List<String> strTags,
                              @RequestParam(name = "start") String start,
                              @RequestParam(name = "end") String end,
-                             @RequestParam(name = "limit") int limit) {
+                             @RequestParam(name = "limit") int limit) throws IOException {
         log.info("Try to write reports");
         List<Tag> tags = strTags.stream().map(this::toTag).toList();
         LocalDateTime startDate = LocalDateTime.parse(start + "T00:00:00");
         LocalDateTime endDate = LocalDateTime.parse(end + "T00:00:00");
-        newsService.writeExcel(tags, startDate, endDate, limit);
+        File file = newsService.writeExcel(tags, startDate, endDate, limit);
+
+        return fileService.generateFileToken(file.getAbsolutePath());
     }
 
     private News toNews(NewsRequestDTO newsRequestDTO) {

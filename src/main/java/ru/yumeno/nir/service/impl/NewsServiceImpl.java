@@ -14,6 +14,10 @@ import ru.yumeno.nir.security.service.UserService;
 import ru.yumeno.nir.service.NewsService;
 import ru.yumeno.nir.utils.ExcelWriter;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -85,7 +89,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public void writeExcel(List<Tag> tags, LocalDateTime startDate, LocalDateTime endDate, int limit) {
+    public File writeExcel(List<Tag> tags, LocalDateTime startDate, LocalDateTime endDate, int limit) {
         List<News> allNews = getAllNews();
         excelWriter.writeNews(allNews, "allNews");
 
@@ -102,6 +106,16 @@ public class NewsServiceImpl implements NewsService {
         User user = userService.getUserByUsername(username);
         excelWriter.writeUser(user);
 
-        excelWriter.writeFile();
+        return excelWriter.writeFile();
+    }
+
+    @Override
+    public String getMimeType(File file) throws IOException {
+        Path path = file.toPath();
+        String mimeType = Files.probeContentType(path);
+        if (mimeType == null) {
+            return "application/octet-stream";
+        }
+        return mimeType;
     }
 }

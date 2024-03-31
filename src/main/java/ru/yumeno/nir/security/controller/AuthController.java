@@ -3,6 +3,7 @@ package ru.yumeno.nir.security.controller;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -55,8 +56,8 @@ public class AuthController {
     }
 
     @GetMapping(value = "/get_roles")
-    public List<String> getRoles(@RequestParam(name = "username") String username) {
-        log.info("Try to get roles of user: " + username);
-        return userService.getUserByUsername(username).getRoles().stream().map(Role::getName).toList();
+    public List<String> getRoles(@RequestParam(name = "token") String token) {
+        log.info("Try to get roles");
+        return jwtTokenProvider.getRolesFromToken(token);
     }
 }

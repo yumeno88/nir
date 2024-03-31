@@ -152,7 +152,7 @@ public class ExcelWriter {
         cell.setCellStyle(style);
     }
 
-    public void writeFile() {
+    public File writeFile() {
         File currDir = new File(".");
         String path = currDir.getAbsolutePath();
         String fileLocation = path.substring(0, path.length() - 1) + "report.xlsx";
@@ -167,5 +167,7 @@ public class ExcelWriter {
         catch (IOException e) {
             log.warn("IOException, message: " + e.getMessage());
         }
+
+        return new File(fileLocation);
     }
 }
