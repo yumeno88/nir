@@ -114,7 +114,7 @@ public class NewsController {
                              @RequestParam(name = "limit") String limit) throws IOException {
         log.info("Try to write reports with start: " + start);
         int limitInt = 100;
-        if (!Objects.equals(limit, "null")) {
+        if (!Objects.equals(limit, "null") && !Objects.equals(limit, "")) {
             limitInt = Integer.parseInt(limit);
         }
         if (Objects.equals(start.trim(), "")) {
